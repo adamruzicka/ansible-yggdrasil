@@ -1,2 +1,41 @@
----
-# tasks file for yggdrasil
+- tags:
+    - install
+  block:
+    - name: Add Apt signing key
+      apt_key:
+        url: https://neilalexander.s3.dualstack.eu-west-2.amazonaws.com/deb/key.txt
+        state: present
+
+    - name: Enable Apt repository
+      apt_repository:
+        repo: deb http://neilalexander.s3.dualstack.eu-west-2.amazonaws.com/deb/ debian yggdrasil
+        state: present
+
+    - name: Install package
+      package:
+        name: yggdrasil
+        state: present
+
+- tags:
+    - configure
+  block:
+    - name: Generate automatic configuration
+      shell: yggdrasil -genconf > "{{ yggdrasil_config_path }}"
+      args:
+        creates: "{{ yggdrasil_config_path }}"
+      when: yggdrasil_generate_configuration
+
+    - name: Generate configuration
+      template:
+        dest: "{{ yggdrasil_config_path }}"
+        src: yggdrasil.conf.j2
+        mode: 0600
+      when: yggdrasil_manage_configuration
+
+- name: Enable the service
+  service:
+    name: yggdrasil
+    state: started
+    enabled: yes
+  tags:
+    - service

@@ -1,2 +1,38 @@
----
-# defaults file for yggdrasil
+yggdrasil_generate_configuration: yes
+yggdrasil_manage_configuration: no
+yggdrasil_config_path: /etc/yggdrasil.conf
+
+# yggdrasil_encryption_public_key:
+# yggdrasil_encryption_private_key:
+# yggdrasil_signing_public_key:
+# yggdrasil_signing_private_key:
+
+yggdrasil_peers: []
+yggdrasil_interface_peers: {}
+yggdrasil_listen: []
+yggdrasil_admin_listen: unix:///var/run/yggdrasil.sock
+yggdrasil_multicast_interfaces:
+  - .*
+yggdrasil_allowed_encryption_public_keys: []
+yggdrasil_link_local_tcp_port: 0
+yggdrasil_if_name: auto
+yggdrasil_if_tap_mode: no
+yggdrasil_if_mtu: 65535
+yggdrasil_switch_info_max_total_queue_size: 4194304
+
+yggdrasil_session_firewall_enable: no
+yggdrasil_session_firewall_allow_from_direct: yes
+yggdrasil_session_firewall_allow_from_remote: yes
+yggdrasil_session_firewall_always_allow_outbound: yes
+yggdrasil_session_firewall_whitelist_encryption_public_keys: []
+yggdrasil_session_firewall_blacklist_encryption_public_keys: []
+
+yggdrasil_tunnel_routing_enable: no
+yggdrasil_tunnel_routing_ipv6_destinations: {}
+yggdrasil_tunnel_routing_ipv6_sources: []
+yggdrasil_tunnel_routing_ipv4_destinations: {}
+yggdrasil_tunnel_routing_ipv4_sources: []
+
+yggdrasil_node_info_privacy: no
+yggdrasil_node_info: {}
+
