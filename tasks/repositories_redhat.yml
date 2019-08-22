@@ -1,0 +1,14 @@
+- name: Add RPM signing key
+  get_url:
+    url: https://neilalexander.s3.dualstack.eu-west-2.amazonaws.com/deb/key.txt
+    dest: /etc/pki/rpm-gpg/RPM-GPG-KEY-yggdrasil
+
+- name: Enable RPM repository
+  copy:
+    content: |
+      [yggdrasil]
+      name = Yggdrasil
+      baseurl = https://neilalexander.s3.dualstack.eu-west-2.amazonaws.com/rpm/
+      gpgcheck=1
+      gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-yggdrasil
+    dest: /etc/yum.repos.d/yggdrasil.repo

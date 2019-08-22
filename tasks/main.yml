@@ -1,15 +1,18 @@
 - tags:
     - install
   block:
-    - name: Add Apt signing key
-      apt_key:
-        url: https://neilalexander.s3.dualstack.eu-west-2.amazonaws.com/deb/key.txt
-        state: present
+    - include_tasks: "repositories_debian.yml"
+      when: ansible_os_family == "Debian"
 
-    - name: Enable Apt repository
-      apt_repository:
-        repo: deb http://neilalexander.s3.dualstack.eu-west-2.amazonaws.com/deb/ debian yggdrasil
+    - include_tasks: "repositories_redhat.yml"
+      when: ansible_os_family == "RedHat"
+
+    - name: Create yggdrasil group
+      group:
+        name: yggdrasil
+        system: yes
         state: present
+      when: ansible_os_family == "RedHat"
 
     - name: Install package
       package:
@@ -24,6 +27,7 @@
       args:
         creates: "{{ yggdrasil_config_path }}"
       when: yggdrasil_generate_configuration
+      notify: restart yggdrasil
 
     - name: Generate configuration
       template:
@@ -31,6 +35,7 @@
         src: yggdrasil.conf.j2
         mode: 0600
       when: yggdrasil_manage_configuration
+      notify: restart yggdrasil
 
 - name: Enable the service
   service:

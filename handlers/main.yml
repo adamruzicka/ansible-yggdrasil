@@ -1,2 +1,4 @@
----
-# handlers file for yggdrasil
+- name: restart yggdrasil
+  service:
+    name: yggdrasil
+    state: restarted

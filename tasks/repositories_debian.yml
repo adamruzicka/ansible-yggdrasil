@@ -1,0 +1,9 @@
+- name: Add Apt signing key
+  apt_key:
+    url: https://neilalexander.s3.dualstack.eu-west-2.amazonaws.com/deb/key.txt
+    state: present
+
+- name: Enable Apt repository
+  apt_repository:
+    repo: deb http://neilalexander.s3.dualstack.eu-west-2.amazonaws.com/deb/ debian yggdrasil
+    state: present
