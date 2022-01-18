@@ -21,11 +21,9 @@ There is not much that really *needs* to be set, apart from the encryption and s
 
     - hosts: servers
       vars:
-        yggdrasil_manage_configuration: abc
-        yggdrasil_encryption_public_key: def
-        yggdrasil_encryption_private_key: ghi
-        yggdrasil_signing_public_key: jkl
-        yggdrasil_signing_private_key: mno
+        yggdrasil_manage_configuration: yes
+        yggdrasil_public_key: def
+        yggdrasil_private_key: ghi
         yggdrasil_listen:
           - tcp://0.0.0.0:12345
         yggdrasil_peers:
