@@ -1,18 +1,27 @@
 {
-  # List of connection strings for outbound peer connections in URI format,
-  # e.g. tls://a.b.c.d:e or socks://a.b.c.d:e/f.g.h.i:j. These connections
-  # will obey the operating system routing table, therefore you should
-  # use this section when you may connect via different interfaces.
+  # Your private key. DO NOT share this with anyone!
+  PrivateKey: {{ yggdrasil_private_key }}
+
+  # List of outbound peer connection strings (e.g. tls://a.b.c.d:e or
+  # socks://a.b.c.d:e/f.g.h.i:j). Connection strings can contain options,
+  # see https://yggdrasil-network.github.io/configurationref.html#peers.
+  # Yggdrasil has no concept of bootstrap nodes - all network traffic
+  # will transit peer connections. Therefore make sure to only peer with
+  # nearby nodes that have good connectivity and low latency. Avoid adding
+  # peers to this list from distant countries as this will worsen your
+  # node's connectivity and performance considerably.
   Peers: {{ yggdrasil_peers | to_nice_json }}
 
   # List of connection strings for outbound peer connections in URI format,
-  # arranged by source interface, e.g. { "eth0": [ tls://a.b.c.d:e ] }.
-  # Note that SOCKS peerings will NOT be affected by this option and should
-  # go in the "Peers" section instead.
+  # arranged by source interface, e.g. { "eth0": [ "tls://a.b.c.d:e" ] }.
+  # You should only use this option if your machine is multi-homed and you
+  # want to establish outbound peer connections on different interfaces.
+  # Otherwise you should use "Peers".
   InterfacePeers: {{ yggdrasil_interface_peers | to_nice_json }}
 
   # Listen addresses for incoming connections. You will need to add
   # listeners in order to accept incoming peerings from non-local nodes.
+  # This is not required if you wish to establish outbound peerings only.
   # Multicast peer discovery will work regardless of any listeners set
   # here. Each listener should be specified in URI format as above, e.g.
   # tls://0.0.0.0:0 or tls://[::]:0 to listen on all interfaces.
@@ -25,28 +34,22 @@
   AdminListen: {{ yggdrasil_admin_listen }}
 
   # Configuration for which interfaces multicast peer discovery should be
-  # enabled on. Each entry in the list should be a json object which may
-  # contain Regex, Beacon, Listen, and Port. Regex is a regular expression
-  # which is matched against an interface name, and interfaces use the
-  # first configuration that they match gainst. Beacon configures whether
-  # or not the node should send link-local multicast beacons to advertise
-  # their presence, while listening for incoming connections on Port.
-  # Listen controls whether or not the node listens for multicast beacons
-  # and opens outgoing connections.
+  # enabled on. Regex is a regular expression which is matched against an
+  # interface name, and interfaces use the first configuration that they
+  # match against. Beacon controls whether or not your node advertises its
+  # presence to others, whereas Listen controls whether or not your node
+  # listens out for and tries to connect to other advertising nodes. See
+  # https://yggdrasil-network.github.io/configurationref.html#multicastinterfaces
+  # for more supported options.
   MulticastInterfaces: {{ yggdrasil_multicast_interfaces | to_nice_json }}
 
   # List of peer public keys to allow incoming peering connections
   # from. If left empty/undefined then all connections will be allowed
   # by default. This does not affect outgoing peerings, nor does it
   # affect link-local peers discovered via multicast.
+  # WARNING: THIS IS NOT A FIREWALL and DOES NOT limit who can reach
+  # open ports or services running on your machine!
   AllowedPublicKeys: {{ yggdrasil_allowed_public_keys | to_nice_json }}
-
-  # Your public key. Your peers may ask you for this to put
-  # into their AllowedPublicKeys configuration.
-  PublicKey: {{ yggdrasil_public_key }}
-
-  # Your private key. DO NOT share this with anyone!
-  PrivateKey: {{ yggdrasil_private_key }}
 
   # Local network interface name for TUN adapter, or "auto" to select
   # an interface automatically, or "none" to run without TUN.
@@ -64,7 +67,7 @@
   # "NodeInfo" are sent back if specified.
   NodeInfoPrivacy: {{ yggdrasil_node_info_privacy | to_json }}
 
-  # Optional node info. This must be a { "key": "value", ... } map
+  # Optional nodeinfo. This must be a { "key": "value", ... } map
   # or set as null. This is entirely optional but, if set, is visible
   # to the whole network on request.
   NodeInfo: {{ yggdrasil_node_info | to_nice_json }}

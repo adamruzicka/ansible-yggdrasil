@@ -2,7 +2,6 @@ yggdrasil_generate_configuration: yes
 yggdrasil_manage_configuration: no
 yggdrasil_config_path: /etc/yggdrasil.conf
 
-# yggdrasil_public_key:
 # yggdrasil_private_key:
 
 yggdrasil_peers: []
