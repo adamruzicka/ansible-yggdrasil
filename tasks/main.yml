@@ -44,3 +44,12 @@
     enabled: yes
   tags:
     - service
+
+- name: Check yggdrasil status
+  command: yggdrasilctl getself
+  register: ygg_output
+
+- name: Get yggdrasil IPv6 address
+  set_fact:
+    yggdrasil_ipv6_address: "{{ ygg_output.stdout_lines | select('search', 'IPv6 address') | first | regex_replace('.*IPv6 address:\\s+([\\w:]+)', '\\1')| trim }}"
+    yggdrasil_ipv6_subnet: "{{ ygg_output.stdout_lines | select('search', 'IPv6 subnet') | first | regex_replace('.*IPv6 subnet:\\s+([\\w:/]+)', '\\1')| trim }}"
